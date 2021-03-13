@@ -47,14 +47,7 @@ def get_age(birth_year, actual_year):  # calculating the age
 
 
 def send_reminder(text):  # sending reminders to myself with a Telegram bot
-    message = (
-        "https://api.telegram.org/bot"
-        + os.getenv("BOT_TOKEN")
-        + "/sendMessage?chat_id="
-        + os.getenv("CHAT_ID")
-        + "&parse_mode=Markdown&text="
-        + text
-    )
+    message = f"https://api.telegram.org/bot{os.getenv('BOT_TOKEN')}/sendMessage?chat_id={os.getenv('CHAT_ID')}&parse_mode=Markdown&text={text}"
     return requests.get(message)
 
 

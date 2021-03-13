@@ -44,4 +44,5 @@ def send_reminder(text): # sending reminders to myself with a Telegram bot
     send_message = requests.get(message)
     
 
-main()
+if __name__ == "__main__":
+    main()

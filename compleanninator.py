@@ -3,12 +3,11 @@ from dotenv import load_dotenv
 import os
 import json
 import requests
+from database import dt
 
 load_dotenv()
 
-people = json.loads(
-    os.environ["PEOPLE"]
-)  # Format: [["name", "dd/mm/yyyy"], ["name", "dd/mm/yyyy"]]
+people = dt.extract_data() # getting people data from database
 
 today = date.today().strftime("%d/%m/%Y").split("/")  # Getting actual year
 

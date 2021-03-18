@@ -31,13 +31,13 @@ def main():
         # scheduling reminders
         if remaining_days == 7:
             text = f"Il compleanno di {name} è tra {remaining_days} giorni, compirà {age} anni"
-            send_reminder(text)
+            send_reminder(text, person[2])
         elif remaining_days == 1:
             text = f"Il compleanno di {name} è domani!"
-            send_reminder(text)
+            send_reminder(text, person[2])
         elif remaining_days == 0:
             text = f"Il compleanno di {name} è oggi! Felici {age} anni!"
-            send_reminder(text)
+            send_reminder(text, person[2])
 
 
 def get_age(birth_year, actual_year):  # calculating the age
@@ -45,8 +45,8 @@ def get_age(birth_year, actual_year):  # calculating the age
     return age
 
 
-def send_reminder(text):  # sending reminders to myself with a Telegram bot
-    message = f"https://api.telegram.org/bot{os.getenv('BOT_TOKEN')}/sendMessage?chat_id={os.getenv('CHAT_ID')}&parse_mode=Markdown&text={text}"
+def send_reminder(text, chat_id):  # sending reminders to myself with a Telegram bot
+    message = f"https://api.telegram.org/bot{os.getenv('BOT_TOKEN')}/sendMessage?chat_id={chat_id}&parse_mode=Markdown&text={text}"
     return requests.get(message)
 
 

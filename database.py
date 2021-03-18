@@ -24,7 +24,8 @@ class database(object):
         CREATE TABLE Compleanninator
         (
         NAME TEXT NOT NULL,
-        BIRTHDAY TEXT NOT NULL
+        BIRTHDAY TEXT NOT NULL,
+        CHAT_ID TEXT NOT NULL
         )
         """
         )
@@ -32,21 +33,21 @@ class database(object):
         self.conn.close()
         return print("Table created")
 
-    def insert_data(self, name, birthday):
+    def insert_data(self, name, birthday, chat_id):
         self.connect()
         cur = self.conn.cursor()
         cur.execute(
-            f"INSERT INTO Compleanninator (NAME, BIRTHDAY) VALUES ('{name}', '{birthday}')"
+            f"INSERT INTO Compleanninator (NAME, BIRTHDAY, CHAT_ID) VALUES ('{name}', '{birthday}', '{chat_id}')"
         )
         self.conn.commit()
         self.conn.close()
         return print("Data Stored")
 
-    def delete_data(self, name, birthday):
+    def delete_data(self, name, birthday, chat_id):
         self.connect()
         cur = self.conn.cursor()
         cur.execute(
-            f"DELETE FROM Compleanninator WHERE (NAME, BIRTHDAY) = ('{name}', '{birthday}')"
+            f"DELETE FROM Compleanninator WHERE (NAME, BIRTHDAY, CHAT_ID) = ('{name}', '{birthday}', '{chat_id}')"
         )
         self.conn.commit()
         self.conn.close()
@@ -55,10 +56,10 @@ class database(object):
     def extract_data(self):
         self.connect()
         cur = self.conn.cursor()
-        cur.execute("SELECT NAME, BIRTHDAY FROM Compleanninator")
+        cur.execute("SELECT NAME, BIRTHDAY, CHAT_ID FROM Compleanninator")
         rows = cur.fetchall()
         self.conn.close()
-        print("Data extracted")
+        print(f"Data extracted: {rows}")
         return rows
 
 

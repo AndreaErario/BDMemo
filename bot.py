@@ -41,7 +41,7 @@ def add_birthday(message):
     else:
         person.clear()
         chat_id = message.chat.id
-        msg = bot.send_message(chat_id, "Chi sarà il festeggiato?")
+        msg = bot.send_message(chat_id, "Chi sarà il festeggiato?\nPuoi annullare l'operazione in qualsiasi momento scrivendo 'Cancella'")
         bot.register_next_step_handler(msg, set_name)
 
 
@@ -49,28 +49,36 @@ def set_name(message):
     if datetime.utcfromtimestamp(message.date) < start_time:
         pass
     else:
-        chat_id = message.chat.id
-        name = message.text
-        person.append(name)
-        msg = bot.send_message(chat_id, "Quando compie gli anni? Format: 00/00/0000")
-        bot.register_next_step_handler(msg, set_date)
+        if message.text.upper() == "CANCELLA":
+            bot.send_message(message.chat.id, "Va bene, annullo l'operazione")
+        else:
+            chat_id = message.chat.id
+            name = message.text
+            person.append(name)
+            msg = bot.send_message(
+                chat_id, "Quando compie gli anni? Format: 00/00/0000"
+            )
+            bot.register_next_step_handler(msg, set_date)
 
 
 def set_date(message):
     if datetime.utcfromtimestamp(message.date) < start_time:
         pass
     else:
-        chat_id = message.chat.id
-        date = message.text
-        try:
-            datetime.strptime(date, "%d/%m/%Y")
-            person.append(date)
-            person.append(chat_id)
-            msg = bot.send_message(chat_id, "Confermi? Si/No")
-            bot.register_next_step_handler(msg, confirm)
-        except:
-            msg = bot.send_message(chat_id, "La data non è valida... Riprova")
-            bot.register_next_step_handler(msg, set_date)
+        if message.text.upper() == "CANCELLA":
+            bot.send_message(message.chat.id, "Va bene, annullo l'operazione")
+        else:
+            chat_id = message.chat.id
+            date = message.text
+            try:
+                datetime.strptime(date, "%d/%m/%Y")
+                person.append(date)
+                person.append(chat_id)
+                msg = bot.send_message(chat_id, "Confermi? Si/No")
+                bot.register_next_step_handler(msg, confirm)
+            except:
+                msg = bot.send_message(chat_id, "La data non è valida... Riprova")
+                bot.register_next_step_handler(msg, set_date)
 
 
 def confirm(message):
@@ -87,7 +95,7 @@ def confirm(message):
             except:
                 bot.send_message(chat_id, "Mi dispiace, qualcosa è andato storto")
             person.clear()
-        elif message.text.upper() == "NO":
+        elif message.text.upper() == "NO" or "CANCELLA":
             person.clear()
             bot.send_message(chat_id, "Va bene, non ti notificherò")
         else:
@@ -101,7 +109,7 @@ def remove_birthday(message):
         pass
     else:
         person.clear()
-        msg = bot.send_message(message.chat.id, "Chi era il festeggiato?")
+        msg = bot.send_message(message.chat.id, "Chi era il festeggiato?\nPuoi annullare l'operazione in qualsiasi momento scrivendo 'Cancella'")
         bot.register_next_step_handler(msg, remove_name)
 
 
@@ -109,28 +117,34 @@ def remove_name(message):
     if datetime.utcfromtimestamp(message.date) < start_time:
         pass
     else:
-        chat_id = message.chat.id
-        name = message.text
-        person.append(name)
-        msg = bot.send_message(chat_id, "Quando compie gli anni? Format: 00/00/0000")
-        bot.register_next_step_handler(msg, remove_date)
+        if message.text.upper() == "CANCELLA":
+            bot.send_message(message.chat.id, "Va bene, annullo l'operazione")
+        else:
+            chat_id = message.chat.id
+            name = message.text
+            person.append(name)
+            msg = bot.send_message(chat_id, "Quando compie gli anni? Format: 00/00/0000")
+            bot.register_next_step_handler(msg, remove_date)
 
 
 def remove_date(message):
     if datetime.utcfromtimestamp(message.date) < start_time:
         pass
     else:
-        chat_id = message.chat.id
-        date = message.text
-        try:
-            datetime.strptime(date, "%d/%m/%Y")
-            person.append(date)
-            person.append(chat_id)
-            msg = bot.send_message(chat_id, "Confermi? Si/No")
-            bot.register_next_step_handler(msg, remove_confirm)
-        except:
-            msg = bot.send_message(chat_id, "La data non è valida... Riprova")
-            bot.register_next_step_handler(msg, remove_date)
+        if message.text.upper() == "CANCELLA":
+            bot.send_message(message.chat.id, "Va bene, annullo l'operazione")
+        else:
+            chat_id = message.chat.id
+            date = message.text
+            try:
+                datetime.strptime(date, "%d/%m/%Y")
+                person.append(date)
+                person.append(chat_id)
+                msg = bot.send_message(chat_id, "Confermi? Si/No")
+                bot.register_next_step_handler(msg, remove_confirm)
+            except:
+                msg = bot.send_message(chat_id, "La data non è valida... Riprova")
+                bot.register_next_step_handler(msg, remove_date)
 
 
 def remove_confirm(message):
@@ -152,7 +166,7 @@ def remove_confirm(message):
             except:
                 bot.send_message(chat_id, "Mi dispiace, qualcosa è andato storto")
             person.clear()
-        elif message.text.upper() == "NO":
+        elif message.text.upper() == "NO" or "CANCELLA":
             person.clear()
             bot.send_message(chat_id, "Va bene, non lo annullerò")
         else:

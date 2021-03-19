@@ -78,7 +78,7 @@ def confirm(message):
         pass
     else:
         chat_id = message.chat.id
-        if message.text == "Si":
+        if message.text.upper() == "SI":
             try:
                 db.insert_data(person[0], person[1], person[2])
                 bot.send_message(
@@ -87,7 +87,7 @@ def confirm(message):
             except:
                 bot.send_message(chat_id, "Mi dispiace, qualcosa è andato storto")
             person.clear()
-        elif message.text == "No":
+        elif message.text.upper() == "NO":
             person.clear()
             bot.send_message(chat_id, "Va bene, non ti notificherò")
         else:
@@ -138,7 +138,7 @@ def remove_confirm(message):
         pass
     else:
         chat_id = message.chat.id
-        if message.text == "Si":
+        if message.text.upper() == "SI":
             try:
                 if (person[0], person[1], str(person[2])) in db.extract_data():
                     db.delete_data(person[0], person[1], person[2])
@@ -152,7 +152,7 @@ def remove_confirm(message):
             except:
                 bot.send_message(chat_id, "Mi dispiace, qualcosa è andato storto")
             person.clear()
-        elif message.text == "No":
+        elif message.text.upper() == "NO":
             person.clear()
             bot.send_message(chat_id, "Va bene, non lo annullerò")
         else:
@@ -165,10 +165,16 @@ def list_birthdays(message):
     if datetime.utcfromtimestamp(message.date) < start_time:
         pass
     else:
+        chat_id = message.chat.id
+        msg_string = ""
         data = db.extract_data()
         for x in data:
             if x[2] == str(message.chat.id):
-                bot.send_message(message.chat.id, f"{x[0]}, {x[1]}")
+                msg_string += f"{x[0]}, {x[1]}\n"
+        if msg_string != "":
+            bot.send_message(chat_id, msg_string)
+        else:
+            bot.send_message(chat_id, "Non hai registrato nessun compleanno")
 
 
 bot.enable_save_next_step_handlers(delay=1)

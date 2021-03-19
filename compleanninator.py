@@ -3,11 +3,11 @@ from dotenv import load_dotenv
 import os
 import json
 import requests
-from database import dt
+from database import db
 
 load_dotenv()
 
-people = dt.extract_data() # getting people data from database
+people = db.extract_data() # getting people data from database
 
 today = date.today().strftime("%d/%m/%Y").split("/")  # Getting actual year
 

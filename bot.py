@@ -2,7 +2,7 @@ import telebot
 from telebot import types
 import os
 from dotenv import load_dotenv
-from database import dt
+from database import db
 from datetime import datetime
 
 load_dotenv()
@@ -80,7 +80,7 @@ def confirm(message):
         chat_id = message.chat.id
         if message.text == "Si":
             try:
-                dt.insert_data(person[0], person[1], person[2])
+                db.insert_data(person[0], person[1], person[2])
                 bot.send_message(
                     chat_id, "È ufficiale! ti ricorderò di questo compleanno"
                 )
@@ -140,8 +140,8 @@ def remove_confirm(message):
         chat_id = message.chat.id
         if message.text == "Si":
             try:
-                if (person[0], person[1], str(person[2])) in dt.extract_data():
-                    dt.delete_data(person[0], person[1], person[2])
+                if (person[0], person[1], str(person[2])) in db.extract_data():
+                    db.delete_data(person[0], person[1], person[2])
                     bot.send_message(
                         chat_id, "Va bene, non notificherò più questo compleanno"
                     )
@@ -165,7 +165,7 @@ def list_birthdays(message):
     if datetime.utcfromtimestamp(message.date) < start_time:
         pass
     else:
-        data = dt.extract_data()
+        data = db.extract_data()
         for x in data:
             if x[2] == str(message.chat.id):
                 bot.send_message(message.chat.id, f"{x[0]}, {x[1]}")

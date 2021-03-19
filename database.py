@@ -63,4 +63,4 @@ class database(object):
         return rows
 
 
-dt = database()
+db = database()

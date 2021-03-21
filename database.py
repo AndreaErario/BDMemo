@@ -43,11 +43,11 @@ class database(object):
         self.conn.close()
         return print("Data Stored")
 
-    def delete_data(self, name, birthday, chat_id):
+    def delete_data(self, name, chat_id):
         self.connect()
         cur = self.conn.cursor()
         cur.execute(
-            f"DELETE FROM Compleanninator WHERE (NAME, BIRTHDAY, CHAT_ID) = ('{name}', '{birthday}', '{chat_id}')"
+            f"DELETE FROM Compleanninator WHERE (NAME, CHAT_ID) = ('{name}', '{chat_id}')"
         )
         self.conn.commit()
         self.conn.close()

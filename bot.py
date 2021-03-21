@@ -123,28 +123,9 @@ def remove_name(message):
             chat_id = message.chat.id
             name = message.text
             person.append(name)
-            msg = bot.send_message(chat_id, "Quando compie gli anni? Format: 00/00/0000")
-            bot.register_next_step_handler(msg, remove_date)
-
-
-def remove_date(message):
-    if datetime.utcfromtimestamp(message.date) < start_time:
-        pass
-    else:
-        if message.text.upper() == "CANCELLA":
-            bot.send_message(message.chat.id, "Va bene, annullo l'operazione")
-        else:
-            chat_id = message.chat.id
-            date = message.text
-            try:
-                datetime.strptime(date, "%d/%m/%Y")
-                person.append(date)
-                person.append(chat_id)
-                msg = bot.send_message(chat_id, "Confermi? Si/No")
-                bot.register_next_step_handler(msg, remove_confirm)
-            except:
-                msg = bot.send_message(chat_id, "La data non è valida... Riprova")
-                bot.register_next_step_handler(msg, remove_date)
+            person.append(chat_id)
+            msg = bot.send_message(chat_id, "Confermi?")
+            bot.register_next_step_handler(msg, remove_confirm)
 
 
 def remove_confirm(message):
@@ -152,14 +133,17 @@ def remove_confirm(message):
         pass
     else:
         chat_id = message.chat.id
+        count = 0
         if message.text.upper() == "SI":
             try:
-                if (person[0], person[1], str(person[2])) in db.extract_data():
-                    db.delete_data(person[0], person[1], person[2])
-                    bot.send_message(
-                        chat_id, "Va bene, non notificherò più questo compleanno"
-                    )
-                else:
+                for x in db.extract_data():
+                    if (person[0], str(person[1])) == (x[0], x[2]):
+                        db.delete_data(person[0], person[1])
+                        bot.send_message(
+                            chat_id, "Va bene, non notificherò più questo compleanno"
+                        )
+                        count += 1
+                if count == 0:
                     bot.send_message(
                         chat_id, "Il compleanno che vuoi eliminare non esiste"
                     )

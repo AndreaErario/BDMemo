@@ -41,7 +41,10 @@ def add_birthday(message):
     else:
         person.clear()
         chat_id = message.chat.id
-        msg = bot.send_message(chat_id, "Chi sarà il festeggiato?\nPuoi annullare l'operazione in qualsiasi momento scrivendo 'Cancella'")
+        msg = bot.send_message(
+            chat_id,
+            "Chi sarà il festeggiato?\nPuoi annullare l'operazione in qualsiasi momento scrivendo 'Cancella'",
+        )
         bot.register_next_step_handler(msg, set_name)
 
 
@@ -109,7 +112,10 @@ def remove_birthday(message):
         pass
     else:
         person.clear()
-        msg = bot.send_message(message.chat.id, "Chi era il festeggiato?\nPuoi annullare l'operazione in qualsiasi momento scrivendo 'Cancella'")
+        msg = bot.send_message(
+            message.chat.id,
+            "Chi era il festeggiato?\nPuoi annullare l'operazione in qualsiasi momento scrivendo 'Cancella'",
+        )
         bot.register_next_step_handler(msg, remove_name)
 
 
@@ -124,7 +130,7 @@ def remove_name(message):
             name = message.text
             person.append(name)
             person.append(chat_id)
-            msg = bot.send_message(chat_id, "Confermi?")
+            msg = bot.send_message(chat_id, "Confermi? Si o No")
             bot.register_next_step_handler(msg, remove_confirm)
 
 
@@ -137,8 +143,8 @@ def remove_confirm(message):
         if message.text.upper() == "SI":
             try:
                 for x in db.extract_data():
-                    if (person[0], str(person[1])) == (x[0], x[2]):
-                        db.delete_data(person[0], person[1])
+                    if (person[0].upper(), str(person[1])) == (x[0].upper(), x[2]):
+                        db.delete_data(x[0], person[1])
                         bot.send_message(
                             chat_id, "Va bene, non notificherò più questo compleanno"
                         )

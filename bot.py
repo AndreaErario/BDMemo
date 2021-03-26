@@ -28,7 +28,7 @@ def send_help(message):
         add = types.InlineKeyboardButton("/add")
         remove = types.InlineKeyboardButton("/remove")
         list_command = types.InlineKeyboardButton("/list")
-        markup.add(add, remove, list_command)
+        markup.add(add, remove, list_command)  # creates a button keyboard on Telegram
         bot.send_message(
             chat_id, "Ecco i comandi che puoi utilizzare:", reply_markup=markup
         )
@@ -58,7 +58,7 @@ def set_name(message):
             chat_id = message.chat.id
             name = message.text
             isUsed = False
-            for x in db.extract_data():
+            for x in db.extract_data():  # checks if the name is not already used
                 if not isUsed:
                     if (name.upper(), str(chat_id)) == (x[0].upper(), x[2]):
                         isUsed = True
@@ -84,12 +84,12 @@ def set_date(message):
             chat_id = message.chat.id
             date = message.text
             try:
-                datetime.strptime(date, "%d/%m/%Y")
+                datetime.strptime(date, "%d/%m/%Y")  # validates the date
                 person.append(date)
                 person.append(chat_id)
                 msg = bot.send_message(chat_id, "Confermi? Si o No")
                 bot.register_next_step_handler(msg, confirm)
-            except:
+            except:  # if date not valid
                 msg = bot.send_message(chat_id, "La data non è valida... Riprova")
                 bot.register_next_step_handler(msg, set_date)
 
@@ -101,7 +101,9 @@ def confirm(message):
         chat_id = message.chat.id
         if message.text.upper() == "SI":
             try:
-                db.insert_data(person[0], person[1], person[2])
+                db.insert_data(
+                    person[0], person[1], person[2]
+                )  # inserts data into the database
                 bot.send_message(
                     chat_id, "È ufficiale! ti ricorderò di questo compleanno"
                 )
@@ -153,13 +155,16 @@ def remove_confirm(message):
         if message.text.upper() == "SI":
             try:
                 for x in db.extract_data():
-                    if (person[0].upper(), str(person[1])) == (x[0].upper(), x[2]):
+                    if (person[0].upper(), str(person[1])) == (
+                        x[0].upper(),
+                        x[2],
+                    ):  # checks if the reminder exists
                         db.delete_data(x[0], person[1])
                         bot.send_message(
                             chat_id, "Va bene, non notificherò più questo compleanno"
                         )
                         count += 1
-                if count == 0:
+                if count == 0:  # if the reminder doesn't exist
                     bot.send_message(
                         chat_id, "Il compleanno che vuoi eliminare non esiste"
                     )
@@ -183,7 +188,9 @@ def list_birthdays(message):
         msg_string = ""
         data = db.extract_data()
         for x in data:
-            if x[2] == str(message.chat.id):
+            if x[2] == str(
+                message.chat.id
+            ):  # list the reminder of the person who requested
                 msg_string += f"{x[0]}, {x[1]}\n"
         if msg_string != "":
             bot.send_message(chat_id, msg_string)

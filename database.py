@@ -9,14 +9,16 @@ class database(object):
     def __init__(self):
         self.URL = os.environ["DATABASE_URL"]
 
-    def connect(self):
+    def connect(self):  # connecting to the database through the URL
         try:
             self.conn = psycopg2.connect(self.URL, sslmode="require")
             return print("Database Connected")
         except:
             return print("Database not Connected")
 
-    def create_table(self):
+    def create_table(
+        self,
+    ):  # creates a new Compleanninator table (used manually after a reset)
         self.connect()
         cur = self.conn.cursor()
         cur.execute(
@@ -33,7 +35,7 @@ class database(object):
         self.conn.close()
         return print("Table created")
 
-    def insert_data(self, name, birthday, chat_id):
+    def insert_data(self, name, birthday, chat_id):  # insert data into the table
         self.connect()
         cur = self.conn.cursor()
         cur.execute(
@@ -43,7 +45,7 @@ class database(object):
         self.conn.close()
         return print("Data Stored")
 
-    def delete_data(self, name, chat_id):
+    def delete_data(self, name, chat_id):  # delete data into the table
         self.connect()
         cur = self.conn.cursor()
         cur.execute(
@@ -53,7 +55,7 @@ class database(object):
         self.conn.close()
         return print("Data deleted")
 
-    def extract_data(self):
+    def extract_data(self):  # get all the data from the table
         self.connect()
         cur = self.conn.cursor()
         cur.execute("SELECT NAME, BIRTHDAY, CHAT_ID FROM Compleanninator")

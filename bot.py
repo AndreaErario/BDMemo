@@ -57,11 +57,21 @@ def set_name(message):
         else:
             chat_id = message.chat.id
             name = message.text
-            person.append(name)
-            msg = bot.send_message(
-                chat_id, "Quando compie gli anni? Format: 00/00/0000"
-            )
-            bot.register_next_step_handler(msg, set_date)
+            isUsed = False
+            for x in db.extract_data():
+                if not isUsed:
+                    if (name.upper(), str(chat_id)) == (x[0].upper(), x[2]):
+                        isUsed = True
+                        msg = bot.send_message(
+                            chat_id, "Hai già usato questo nome, inseriscine un altro."
+                        )
+                        bot.register_next_step_handler(msg, set_name)
+            if not isUsed:
+                person.append(name)
+                msg = bot.send_message(
+                    chat_id, "Quando compie gli anni? Format: 00/00/0000"
+                )
+                bot.register_next_step_handler(msg, set_date)
 
 
 def set_date(message):

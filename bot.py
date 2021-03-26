@@ -43,7 +43,7 @@ def add_birthday(message):
         chat_id = message.chat.id
         msg = bot.send_message(
             chat_id,
-            "Chi sarà il festeggiato?\nPuoi annullare l'operazione in qualsiasi momento scrivendo 'Cancella'",
+            "Chi sarà il festeggiato?\n\nPuoi annullare l'operazione in qualsiasi momento scrivendo 'Cancella'",
         )
         bot.register_next_step_handler(msg, set_name)
 
@@ -69,7 +69,7 @@ def set_name(message):
             if not isUsed:
                 person.append(name)
                 msg = bot.send_message(
-                    chat_id, "Quando compie gli anni? Format: 00/00/0000"
+                    chat_id, "Quando compie gli anni?\nEs: 13/01/2004"
                 )
                 bot.register_next_step_handler(msg, set_date)
 
@@ -87,7 +87,7 @@ def set_date(message):
                 datetime.strptime(date, "%d/%m/%Y")
                 person.append(date)
                 person.append(chat_id)
-                msg = bot.send_message(chat_id, "Confermi? Si/No")
+                msg = bot.send_message(chat_id, "Confermi? Si o No")
                 bot.register_next_step_handler(msg, confirm)
             except:
                 msg = bot.send_message(chat_id, "La data non è valida... Riprova")
@@ -124,7 +124,7 @@ def remove_birthday(message):
         person.clear()
         msg = bot.send_message(
             message.chat.id,
-            "Chi era il festeggiato?\nPuoi annullare l'operazione in qualsiasi momento scrivendo 'Cancella'",
+            "Chi era il festeggiato?\n\nPuoi annullare l'operazione in qualsiasi momento scrivendo 'Cancella'",
         )
         bot.register_next_step_handler(msg, remove_name)
 

@@ -1,7 +1,6 @@
 from datetime import date, datetime
 from dotenv import load_dotenv
 import os
-import json
 import requests
 from database import db
 

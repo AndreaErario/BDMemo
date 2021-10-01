@@ -64,5 +64,13 @@ class database(object):
         print(f"Data extracted: {rows}")
         return rows
 
+    def get_list(self, chat_id):  # get the data stored from a user
+        self.connect()
+        cur = self.conn.cursor()
+        cur.execute(f"SELECT NAME, BIRTHDAY FROM Compleanninator WHERE CHAT_ID = '{chat_id}'")
+        list = cur.fetchall()
+        self.conn.close()
+        return list
+
 
 db = database()

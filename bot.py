@@ -186,12 +186,9 @@ def list_birthdays(message):
     else:
         chat_id = message.chat.id
         msg_string = ""
-        data = db.extract_data()
-        for x in data:
-            if x[2] == str(
-                message.chat.id
-            ):  # list the reminder of the person who requested
-                msg_string += f"{x[0]}, {x[1]}\n"
+        list = db.get_list(chat_id)
+        for person in list:
+            msg_string += f"{person[0]}, {person[1]}\n"
         if msg_string != "":
             bot.send_message(chat_id, msg_string)
         else:

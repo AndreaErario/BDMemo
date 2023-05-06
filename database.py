@@ -1,4 +1,4 @@
-import psycopg2
+import sqlite3
 import os
 from dotenv import load_dotenv
 
@@ -7,11 +7,11 @@ load_dotenv()
 
 class database(object):
     def __init__(self):
-        self.URL = os.environ["DATABASE_URL"]
+        self.PATH = os.environ["DATABASE_PATH"]
 
-    def connect(self):  # connecting to the database through the URL
+    def connect(self):  # connects to the database
         try:
-            self.conn = psycopg2.connect(self.URL, sslmode="require")
+            self.conn = sqlite3.connect(self.PATH)
             return print("Database Connected")
         except:
             return print("Database not Connected")

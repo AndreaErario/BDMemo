@@ -187,6 +187,7 @@ def list_birthdays(message):
         chat_id = message.chat.id
         msg_string = ""
         list = db.get_list(chat_id)
+        list.sort(key = lambda person: datetime.strptime(person[1], "%d/%m/%Y"))
         for person in list:
             msg_string += f"{person[0]}, {person[1]}\n"
         if msg_string != "":

@@ -18,12 +18,12 @@ class database(object):
 
     def create_table(
         self,
-    ):  # creates a new Compleanninator table (used manually after a reset)
+    ):  # creates a new BDMemo table (used manually after a reset)
         self.connect()
         cur = self.conn.cursor()
         cur.execute(
             """
-        CREATE TABLE Compleanninator
+        CREATE TABLE BDMemo
         (
         NAME TEXT NOT NULL,
         BIRTHDAY TEXT NOT NULL,
@@ -39,7 +39,7 @@ class database(object):
         self.connect()
         cur = self.conn.cursor()
         cur.execute(
-            f"INSERT INTO Compleanninator (NAME, BIRTHDAY, CHAT_ID) VALUES ('{name}', '{birthday}', '{chat_id}')"
+            f"INSERT INTO BDMemo (NAME, BIRTHDAY, CHAT_ID) VALUES ('{name}', '{birthday}', '{chat_id}')"
         )
         self.conn.commit()
         self.conn.close()
@@ -49,7 +49,7 @@ class database(object):
         self.connect()
         cur = self.conn.cursor()
         cur.execute(
-            f"DELETE FROM Compleanninator WHERE (NAME, CHAT_ID) = ('{name}', '{chat_id}')"
+            f"DELETE FROM BDMemo WHERE (NAME, CHAT_ID) = ('{name}', '{chat_id}')"
         )
         self.conn.commit()
         self.conn.close()
@@ -58,7 +58,7 @@ class database(object):
     def extract_data(self):  # get all the data from the table
         self.connect()
         cur = self.conn.cursor()
-        cur.execute("SELECT NAME, BIRTHDAY, CHAT_ID FROM Compleanninator")
+        cur.execute("SELECT NAME, BIRTHDAY, CHAT_ID FROM BDMemo")
         rows = cur.fetchall()
         self.conn.close()
         print(f"Data extracted: {rows}")
@@ -67,7 +67,7 @@ class database(object):
     def get_list(self, chat_id):  # get the data stored from a user
         self.connect()
         cur = self.conn.cursor()
-        cur.execute(f"SELECT NAME, BIRTHDAY FROM Compleanninator WHERE CHAT_ID = '{chat_id}'")
+        cur.execute(f"SELECT NAME, BIRTHDAY FROM BDMemo WHERE CHAT_ID = '{chat_id}'")
         list = cur.fetchall()
         self.conn.close()
         return list

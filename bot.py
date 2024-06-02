@@ -3,12 +3,12 @@ from telebot import types
 import os
 from dotenv import load_dotenv
 from database import db
-from datetime import datetime
+from datetime import datetime, timezone
 
 load_dotenv()
 
 bot = telebot.TeleBot(os.environ["BOT_TOKEN"])
-start_time = datetime.utcnow()
+start_time = datetime.now(timezone.utc)
 
 person = []
 
@@ -20,7 +20,7 @@ def send_welcome(message):
 
 @bot.message_handler(commands=["help"])  # on /help
 def send_help(message):
-    if datetime.utcfromtimestamp(message.date) < start_time:
+    if datetime.fromtimestamp(message.date, timezone.utc) < start_time:
         pass
     else:
         chat_id = message.chat.id
@@ -36,7 +36,7 @@ def send_help(message):
 
 @bot.message_handler(commands=["add"])  # on /add
 def add_birthday(message):
-    if datetime.utcfromtimestamp(message.date) < start_time:
+    if datetime.fromtimestamp(message.date, timezone.utc) < start_time:
         pass
     else:
         person.clear()
@@ -49,7 +49,7 @@ def add_birthday(message):
 
 
 def set_name(message):
-    if datetime.utcfromtimestamp(message.date) < start_time:
+    if datetime.fromtimestamp(message.date, timezone.utc) < start_time:
         pass
     else:
         if message.text.upper() == "CANCELLA":
@@ -75,7 +75,7 @@ def set_name(message):
 
 
 def set_date(message):
-    if datetime.utcfromtimestamp(message.date) < start_time:
+    if datetime.fromtimestamp(message.date, timezone.utc) < start_time:
         pass
     else:
         if message.text.upper() == "CANCELLA":
@@ -95,7 +95,7 @@ def set_date(message):
 
 
 def confirm(message):
-    if datetime.utcfromtimestamp(message.date) < start_time:
+    if datetime.fromtimestamp(message.date, timezone.utc) < start_time:
         pass
     else:
         chat_id = message.chat.id
@@ -120,7 +120,7 @@ def confirm(message):
 
 @bot.message_handler(commands=["remove"])  # on /remove
 def remove_birthday(message):
-    if datetime.utcfromtimestamp(message.date) < start_time:
+    if datetime.fromtimestamp(message.date, timezone.utc) < start_time:
         pass
     else:
         person.clear()
@@ -132,7 +132,7 @@ def remove_birthday(message):
 
 
 def remove_name(message):
-    if datetime.utcfromtimestamp(message.date) < start_time:
+    if datetime.fromtimestamp(message.date, timezone.utc) < start_time:
         pass
     else:
         if message.text.upper() == "CANCELLA":
@@ -147,7 +147,7 @@ def remove_name(message):
 
 
 def remove_confirm(message):
-    if datetime.utcfromtimestamp(message.date) < start_time:
+    if datetime.fromtimestamp(message.date, timezone.utc) < start_time:
         pass
     else:
         chat_id = message.chat.id
@@ -181,7 +181,7 @@ def remove_confirm(message):
 
 @bot.message_handler(commands=["list"])  # on /list
 def list_birthdays(message):
-    if datetime.utcfromtimestamp(message.date) < start_time:
+    if datetime.fromtimestamp(message.date, timezone.utc) < start_time:
         pass
     else:
         chat_id = message.chat.id

@@ -16,7 +16,7 @@ class database(object):
         except:
             return print("Database not Connected")
 
-    def create_table(
+    def setup(
         self,
     ):  # creates a new BDMemo table (used manually after a reset)
         self.connect()
@@ -31,9 +31,18 @@ class database(object):
         )
         """
         )
+        cur.execute(
+            """
+        CREATE TABLE Settings
+        (
+        CHAT_ID TEXT NOT NULL,
+        REMINDER_DAYS TEXT NOT NULL 
+        )
+        """
+        )
         self.conn.commit()
         self.conn.close()
-        return print("Table created")
+        return print("Tables created")
 
     def insert_data(self, name, birthday, chat_id):  # insert data into the table
         self.connect()
@@ -44,6 +53,26 @@ class database(object):
         self.conn.commit()
         self.conn.close()
         return print("Data Stored")
+    
+    def insert_settings(self, chat_id, reminder_days):
+        self.connect()
+        cur = self.conn.cursor()
+        cur.execute(
+            f"INSERT INTO Settings (CHAT_ID, REMINDER_DAYS) VALUES ('{chat_id}', '{reminder_days}')"
+        )
+        self.conn.commit()
+        self.conn.close()
+        return print("Settings stored")
+
+    def edit_settings(self, chat_id, reminder_days):
+        self.connect()
+        cur = self.conn.cursor()
+        cur.execute(
+            f"UPDATE Settings SET REMINDER_DAYS = '{reminder_days}' WHERE CHAT_ID = '{chat_id}'"
+        )
+        self.conn.commit()
+        self.conn.close()
+        return print(f"Settings changed: [{reminder_days}]")
 
     def delete_data(self, name, chat_id):  # delete data into the table
         self.connect()
@@ -62,6 +91,15 @@ class database(object):
         rows = cur.fetchall()
         self.conn.close()
         print(f"Data extracted: {rows}")
+        return rows
+    
+    def extract_settings(self):
+        self.connect()
+        cur = self.conn.cursor()
+        cur.execute("SELECT CHAT_ID, REMINDER_DAYS FROM Settings")
+        rows = cur.fetchall()
+        self.conn.close()
+        print("Settings extracted")
         return rows
 
     def get_list(self, chat_id):  # get the data stored from a user

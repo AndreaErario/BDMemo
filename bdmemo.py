@@ -7,6 +7,7 @@ from database import db
 load_dotenv()
 
 people = db.extract_data() # getting people data from database
+settings = dict(db.extract_settings())
 
 today = date.today().strftime("%d/%m/%Y").split("/")  # Getting actual year
 
@@ -28,15 +29,18 @@ def main():
         remaining_days = remaining_days.days
 
         # scheduling reminders
-        if remaining_days == 7:
-            text = f"Il compleanno di {name} è tra {remaining_days} giorni, compirà {age} anni"
-            send_reminder(text, person[2])
-        elif remaining_days == 1:
-            text = f"Il compleanno di {name} è domani!"
-            send_reminder(text, person[2])
-        elif remaining_days == 0:
-            text = f"Il compleanno di {name} è oggi! Felici {age} anni!"
-            send_reminder(text, person[2])
+        reminder_days = list(map(int, settings[f"{person[2]}"].split(",")))
+        
+        if remaining_days in reminder_days:
+            if remaining_days == 0:
+                text = f"Il compleanno di {name} è oggi! Felici {age} anni!"
+                send_reminder(text, person[2])
+            elif remaining_days == 1:
+                text = f"Il compleanno di {name} è domani!"
+                send_reminder(text, person[2])
+            else:
+                text = f"Il compleanno di {name} è tra {remaining_days} giorni, compirà {age} anni"
+                send_reminder(text, person[2])
 
 
 def get_age(birth_year, actual_year):  # calculating the age

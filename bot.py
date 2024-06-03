@@ -15,6 +15,9 @@ person = []
 
 @bot.message_handler(commands=["start"])  # on /start
 def send_welcome(message):
+    settings = dict(db.extract_settings())
+    if not settings[f"{message.chat.id}"]:   # if there are no settings for the user set default
+        db.insert_settings(message.chat.id, "0,1,7")
     bot.reply_to(message, "Ciao! Grazie per avermi aggiunto, usa /help per iniziare")
 
 
@@ -177,6 +180,31 @@ def remove_confirm(message):
         else:
             msg = bot.send_message(chat_id, "La risposta deve essere o Si o No")
             bot.register_next_step_handler(msg, confirm)
+
+
+@bot.message_handler(commands=["settings"])   # on /settings
+def change_settings(message):
+    if datetime.fromtimestamp(message.date, timezone.utc) < start_time:
+        pass
+    else:
+        chat_id = message.chat.id
+        msg = bot.send_message(chat_id, "Scrivi quanti giorni prima vuoi essere avvisato separandoli con una virgola (verrai sempre avvisato il giorno stesso)")
+        bot.register_next_step_handler(msg, validate_settings)
+
+
+def validate_settings(message):
+    if datetime.fromtimestamp(message.date, timezone.utc) < start_time:
+        pass
+    else:
+        chat_id = message.chat.id
+        days = message.text.split(",")
+        try:
+            list(map(int, days))
+            db.edit_settings(chat_id,"0," + "".join(message.text.split()))
+            msg = bot.send_message(chat_id, "D'ora in poi verrai avvisato in questi giorni")
+        except:
+            msg = bot.send_message(chat_id, "Scrivi solo numeri separati da una virgola")
+            bot.register_next_step_handler(msg, validate_settings)
 
 
 @bot.message_handler(commands=["list"])  # on /list

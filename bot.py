@@ -113,7 +113,7 @@ def confirm(message):
             except:
                 bot.send_message(chat_id, "Mi dispiace, qualcosa è andato storto")
             person.clear()
-        elif message.text.upper() == "NO" or "CANCELLA":
+        elif message.text.upper() in ["NO", "CANCELLA"]:
             person.clear()
             bot.send_message(chat_id, "Va bene, non ti notificherò")
         else:
@@ -174,12 +174,12 @@ def remove_confirm(message):
             except:
                 bot.send_message(chat_id, "Mi dispiace, qualcosa è andato storto")
             person.clear()
-        elif message.text.upper() == "NO" or "CANCELLA":
+        elif message.text.upper() in ["NO", "CANCELLA"]:
             person.clear()
             bot.send_message(chat_id, "Va bene, non lo annullerò")
         else:
             msg = bot.send_message(chat_id, "La risposta deve essere o Si o No")
-            bot.register_next_step_handler(msg, confirm)
+            bot.register_next_step_handler(msg, remove_confirm)
 
 
 @bot.message_handler(commands=["settings"])   # on /settings

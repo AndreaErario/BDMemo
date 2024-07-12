@@ -16,7 +16,7 @@ person = []
 @bot.message_handler(commands=["start"])  # on /start
 def send_welcome(message):
     settings = dict(db.extract_settings())
-    if not settings[f"{message.chat.id}"]:   # if there are no settings for the user set default
+    if not settings or not settings[f"{message.chat.id}"]:   # if there are no settings for the user set default
         db.insert_settings(message.chat.id, "0,1,7")
     bot.reply_to(message, "Ciao! Grazie per avermi aggiunto, usa /help per iniziare")
 

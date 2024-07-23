@@ -27,14 +27,29 @@ def send_help(message):
         pass
     else:
         chat_id = message.chat.id
-        markup = types.ReplyKeyboardMarkup(row_width=2, one_time_keyboard=True)
-        add = types.InlineKeyboardButton("/add")
-        remove = types.InlineKeyboardButton("/remove")
-        list_command = types.InlineKeyboardButton("/list")
-        markup.add(add, remove, list_command)  # creates a button keyboard on Telegram
+        keyboard = types.InlineKeyboardMarkup([
+            [types.InlineKeyboardButton("/add", callback_data="add"), types.InlineKeyboardButton("/remove", callback_data="remove")],
+            [types.InlineKeyboardButton("/settings", callback_data="settings"), types.InlineKeyboardButton("/list", callback_data="list")]
+            ])
         bot.send_message(
-            chat_id, "Ecco i comandi che puoi utilizzare:", reply_markup=markup
+            chat_id, "Ecco i comandi che puoi utilizzare:", reply_markup=keyboard
         )
+
+
+@bot.callback_query_handler(lambda query: query.data in ["add", "remove", "settings", "list"])
+def handle_query(query):
+    if datetime.fromtimestamp(query.message.date, timezone.utc) < start_time:
+        pass
+    else:
+        if query.data == "add":
+            add_birthday(query.message)
+        elif query.data == "remove":
+            remove_birthday(query.message)
+        elif query.data == "settings":
+            change_settings(query.message)
+        elif query.data == "list":
+            bot.send_message(query.message.chat.id, "Ecco la lista dei compleanni salvati:")
+            list_birthdays(query.message)
 
 
 @bot.message_handler(commands=["add"])  # on /add

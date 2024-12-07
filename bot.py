@@ -41,6 +41,8 @@ def handle_query(query):
     if datetime.fromtimestamp(query.message.date, timezone.utc) < start_time:
         pass
     else:
+        bot.answer_callback_query(query.id, "In esecuzione...")
+        bot.delete_message(query.message.chat.id, query.message.id)
         if query.data == "add":
             add_birthday(query.message)
         elif query.data == "remove":
